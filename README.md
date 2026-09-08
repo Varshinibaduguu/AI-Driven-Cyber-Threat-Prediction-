@@ -1,8 +1,5 @@
 # AI Cyber Security Threat Agent (Cyber Agent Dashboard)
 
-> For Educational Purposes Only — Built by **Varshini Badugu** for Learning.
-> This is an educational project version by Varshini Badugu ([Varshinibaduguu](https://github.com/Varshinibaduguu)), used with permission for study and coursework.
-
 An interactive security analytics dashboard that simulates and visualizes cyber threats in real time. It includes static file analysis, URL reputation checks, live threat monitoring with a world map and 3D globe, database storage integrations, and an assistant for explaining the panels.
 
 ## Features

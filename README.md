@@ -2,6 +2,77 @@
 
 An interactive security analytics dashboard that simulates and visualizes cyber threats in real time. It includes static file analysis, URL reputation checks, live threat monitoring with a world map and 3D globe, database storage integrations, and an assistant for explaining the panels.
 
+By Varshini Badugu
+
+---
+
+## Architecture & Diagrams
+
+### System Architecture
+
+```mermaid
+flowchart TB
+    User([User Browser]) --> UI[Dashboard UI<br/>HTML / CSS / JS]
+    UI -->|REST| Flask[Flask Backend<br/>app_flask.py]
+    UI <-->|WebSocket| SIO[Flask-SocketIO<br/>Live Updates]
+
+    Flask --> Static[Static Analysis<br/>CSV Upload + ML Model]
+    Flask --> URL[URL Intelligence<br/>URL Model]
+    Flask --> Live[Live Threat Engine<br/>Live Threat Model]
+    Flask --> DB[(Threat Storage<br/>SQLite + MySQL / Postgres<br/>MongoDB / Redis / DynamoDB)]
+    Flask --> PDF[PDF Reports<br/>ReportLab]
+
+    Static --> PDF
+    Live --> SIO
+    Live --> DB
+    DB --> Hunt[Threat Hunting<br/>+ AIP Analysis]
+    DB --> PDF
+
+    UI --> Map[Leaflet Threat Map]
+    UI --> Globe[Three.js 3D Globe]
+    UI --> Charts[Chart.js Charts]
+    UI --> Chat[Security Assistant]
+```
+
+### Live Threat Monitoring Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant UI as Dashboard
+    participant F as Flask + SocketIO
+    participant M as Live Threat Model
+    participant D as SQLite / DBs
+
+    U->>UI: Click Start Monitoring
+    UI->>F: POST /api/start_monitoring
+    loop Every interval
+        F->>M: Generate + score threat
+        M-->>F: Threat + severity + confidence
+        F->>D: Store event (if enabled)
+        F-->>UI: Emit threat + stats_update
+        UI->>UI: Update feed, charts, map, globe
+    end
+    U->>UI: Click Stop / Download Report
+    UI->>F: GET /download_threat_report
+    F-->>U: live_threat_latest.pdf
+```
+
+### Threat Detection Pipeline
+
+```mermaid
+flowchart LR
+    A[Input<br/>CSV / URL / Live Packet] --> B[Preprocess<br/>Encode + Scale]
+    B --> C{ML Model Score}
+    C -->|prob >= threshold| D[Threat<br/>Critical / High / Medium / Low]
+    C -->|prob < threshold| E[Safe / Benign]
+    D --> F[Visualize<br/>Feed + Map + Globe + Charts]
+    D --> G[Persist<br/>SQLite + Snapshots]
+    D --> H[Report<br/>PDF + Recommendations]
+```
+
+---
+
 ## Features
 
 - **Static Data Threat Check**  
